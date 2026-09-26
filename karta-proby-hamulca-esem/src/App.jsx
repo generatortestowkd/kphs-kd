@@ -32,11 +32,11 @@ const SLUZBOWY_VEHICLES_DOC = doc(db, 'kph_sluzbowy', 'pojazdy');
 // ===== USTAWIENIA =====
 const ADMIN_PASSWORD = 'KPH2026';
 const DEFAULT_UPDATE = { date: '', changes: '' };
-// Ciśnienie powietrza w przewodzie głównym — stałe dla każdego pojazdu
+// Ciśnienie powietrza w przewodzie głównym — wartość domyślna, gdy pojazd nie ma własnej
 const CISNIENIE_PRZEWOD_GLOWNY = 0.5;
 
 const EMPTY_VEHICLE = {
-  name: '', masaOgolna: '', masaPusty: '', masaWlasna: '', masaSluzbowa: '', masaHamujaca: '', cisnienie: '',
+  name: '', masaOgolna: '', masaPusty: '', masaWlasna: '', masaSluzbowa: '', masaHamujaca: '', cisnienieGlowny: '0,5', cisnienie: '',
   hamulecElektro: 'TAK', ukladSterowania: 'TAK', ukladDrzwi: 'TAK', inne: 'TAK',
   sprawdzony: true
 };
@@ -59,6 +59,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA108-011",
     "masaOgolna": 59,
     "masaHamujaca": 80,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -72,6 +73,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA132-002",
     "masaOgolna": 98,
     "masaHamujaca": 135,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -85,6 +87,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA134-001 do SA134-002",
     "masaOgolna": 86,
     "masaHamujaca": 135,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -98,6 +101,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA134-003 do SA134-007",
     "masaOgolna": 98,
     "masaHamujaca": 135,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -111,6 +115,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA134-023 do SA134-025",
     "masaOgolna": 98,
     "masaHamujaca": 135,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -124,6 +129,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA135-001 do SA135-003",
     "masaOgolna": 55,
     "masaHamujaca": 69,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -137,6 +143,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA135-004 do SA135-009",
     "masaOgolna": 55,
     "masaHamujaca": 69,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.8,
     "hamulecElektro": "-",
     "ukladSterowania": "-",
@@ -150,6 +157,7 @@ const DEFAULT_VEHICLES = [
     "name": "SA139-010 do SA139-014",
     "masaOgolna": 106,
     "masaHamujaca": 132,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 1.0,
     "hamulecElektro": "-",
     "ukladSterowania": "TAK",
@@ -163,6 +171,7 @@ const DEFAULT_VEHICLES = [
     "name": "48WEc-024 do 48WEc-036",
     "masaOgolna": 201,
     "masaHamujaca": 358,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.95,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -176,6 +185,7 @@ const DEFAULT_VEHICLES = [
     "name": "31WE-001 do 31WE-005",
     "masaOgolna": 172,
     "masaHamujaca": 281,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 1.0,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -189,6 +199,7 @@ const DEFAULT_VEHICLES = [
     "name": "31WE-020 do 31WE-024",
     "masaOgolna": 172,
     "masaHamujaca": 281,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 1.0,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -202,6 +213,7 @@ const DEFAULT_VEHICLES = [
     "name": "36WEa-011 do 36WEa-016",
     "masaOgolna": 135,
     "masaHamujaca": 217,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 1.0,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -215,6 +227,7 @@ const DEFAULT_VEHICLES = [
     "name": "36WEh-012 do 36WEh-017",
     "masaOgolna": 143,
     "masaHamujaca": 228,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 1.0,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -228,6 +241,7 @@ const DEFAULT_VEHICLES = [
     "name": "45WE-019 do 45WE-029",
     "masaOgolna": 207,
     "masaHamujaca": 335,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 1.0,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -241,6 +255,7 @@ const DEFAULT_VEHICLES = [
     "name": "EN57-1703",
     "masaOgolna": 138,
     "masaHamujaca": 124,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.7,
     "hamulecElektro": "-",
     "ukladSterowania": "TAK",
@@ -254,6 +269,7 @@ const DEFAULT_VEHICLES = [
     "name": "EN57AKD 1937",
     "masaOgolna": 155,
     "masaHamujaca": 155,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.7,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -267,6 +283,7 @@ const DEFAULT_VEHICLES = [
     "name": "EN57AKM 1718",
     "masaOgolna": 140,
     "masaHamujaca": 165,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.7,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -280,6 +297,7 @@ const DEFAULT_VEHICLES = [
     "name": "EN57AL 1501",
     "masaOgolna": 147,
     "masaHamujaca": 133,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.7,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -293,6 +311,7 @@ const DEFAULT_VEHICLES = [
     "name": "EN57AL 1542",
     "masaOgolna": 147,
     "masaHamujaca": 133,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.7,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -306,6 +325,7 @@ const DEFAULT_VEHICLES = [
     "name": "EN67AL 1938",
     "masaOgolna": 145,
     "masaHamujaca": 133,
+    "cisnienieGlowny": 0.5,
     "cisnienie": 0.7,
     "hamulecElektro": "TAK",
     "ukladSterowania": "TAK",
@@ -364,6 +384,7 @@ const fromMainCard = (v, i) => ({
   masaWlasna: v.masaWlasna ?? '',
   masaSluzbowa: v.masaSluzbowa ?? '',
   masaHamujaca: v.masaHamujaca ?? '',
+  cisnienieGlowny: v.cisnienieGlowny ?? CISNIENIE_PRZEWOD_GLOWNY,
   cisnienie: v.cisnienie ?? '',
   hamulecElektro: v.hamulecElektro || '-',
   ukladSterowania: v.ukladSterowania || '-',
@@ -373,6 +394,9 @@ const fromMainCard = (v, i) => ({
 });
 
 const round2 = (n) => Math.round(n * 100) / 100;
+const cisnienieGlownePojazdu = (v) => toNumber(v.cisnienieGlowny) || CISNIENIE_PRZEWOD_GLOWNY;
+// sortowanie „naturalne”: 31WE przed 36WEa, EN57-1703 przed EN57AKD itd.
+const compareNames = (a, b) => String(a.name || '').localeCompare(String(b.name || ''), 'pl', { numeric: true, sensitivity: 'base' });
 const normName = (s) => String(s || '').trim().toLowerCase();
 
 // Łączy listę zwykłej karty (masa ogólna) z listą „przejazd służbowy” (masa bez podróżnych).
@@ -490,6 +514,7 @@ export default function App() {
   const [vehicle2, setVehicle2] = useState('');
   const [procentWymagany, setProcentWymagany] = useState('');
   const [showResults, setShowResults] = useState(false);
+  const [sortAlfabetyczne, setSortAlfabetyczne] = useState(true);
   const [formError, setFormError] = useState('');
 
   // tryb administratora
@@ -520,6 +545,7 @@ export default function App() {
     const unsubVehicles = onSnapshot(VEHICLES_DOC, async snap => {
       if (snap.metadata.hasPendingWrites) return;
       const list = snap.exists() ? snap.data().list : null;
+      if (snap.exists() && typeof snap.data().sortAlfabetyczne === 'boolean') setSortAlfabetyczne(snap.data().sortAlfabetyczne);
       if (Array.isArray(list) && list.length > 0) {
         // uzupełnij masę pustego składu z wbudowanego zestawienia, jeśli w bazie jej jeszcze nie ma
         const defByName = new Map(DEFAULT_VEHICLES.map(d => [normName(d.name), d]));
@@ -574,10 +600,32 @@ export default function App() {
     setSaveStatus('saving');
     const t = setTimeout(() => {
       vehiclesDirty.current = false;
-      saveToDb(VEHICLES_DOC, { list: vehicles, zmieniono: new Date().toISOString() });
+      saveToDb(VEHICLES_DOC, { list: vehicles, sortAlfabetyczne, zmieniono: new Date().toISOString() });
     }, 800);
     return () => clearTimeout(t);
-  }, [vehicles]);
+  }, [vehicles, sortAlfabetyczne]);
+
+  // Lista w kolejności do wyświetlenia (wybór pojazdu i panel administratora)
+  const orderedVehicles = sortAlfabetyczne ? [...vehicles].sort(compareNames) : vehicles;
+
+  const toggleSort = (on) => {
+    vehiclesDirty.current = true;
+    setAutoList(false);
+    // przy wyłączaniu zapamiętujemy bieżący układ alfabetyczny jako punkt startowy
+    if (!on) setVehicles(list => [...list].sort(compareNames));
+    setSortAlfabetyczne(on);
+  };
+
+  const moveVehicle = (id, dir) => {
+    changeVehicles(list => {
+      const i = list.findIndex(v => v.id === id);
+      const j = i + dir;
+      if (i < 0 || j < 0 || j >= list.length) return list;
+      const copy = [...list];
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+      return copy;
+    });
+  };
 
   useEffect(() => {
     if (!updateDirty.current) return;
@@ -618,6 +666,7 @@ export default function App() {
     const procentDokladny = 100 * masaHamujacaRzeczywista / masaOgolna;
     const procentMasyHamujacejRzeczywistej = Math.floor(procentDokladny + 1e-9);
     const cisnienie = Math.max(...selected.map(v => toNumber(v.cisnienie) || 0));
+    const cisnienieGlowny = Math.max(...selected.map(cisnienieGlownePojazdu));
 
     const isSuccess = masaHamujacaRzeczywista >= masaHamujacaWymagana &&
                       procentMasyHamujacejRzeczywistej >= pw;
@@ -626,7 +675,7 @@ export default function App() {
       sumaMasOgolnych, sumaLadunku, masaOgolna, masaHamujacaRzeczywista,
       masaHamujacaWymagana, masaHamujacaWymaganaDokladna,
       procentMasyHamujacejRzeczywistej, procentDokladny,
-      cisnienie, isSuccess
+      cisnienie, cisnienieGlowny, isSuccess
     };
   };
 
@@ -670,6 +719,7 @@ export default function App() {
     const msl = toNumber(newVehicle.masaSluzbowa);
     const mh = toNumber(newVehicle.masaHamujaca);
     const p = toNumber(newVehicle.cisnienie);
+    const pg = toNumber(newVehicle.cisnienieGlowny);
 
     if (!name) return setAddError('Wpisz nazwę serii pojazdów.');
     if (vehicles.some(v => v.name.trim().toLowerCase() === name.toLowerCase()))
@@ -680,11 +730,12 @@ export default function App() {
     if (mw !== '' && (mw <= 0 || mw > mo)) return setAddError('Masa własna musi być większa od zera i nie większa od masy ogólnej.');
     if (msl !== '' && (msl <= 0 || msl > mo)) return setAddError('Masa służbowa musi być większa od zera i nie większa od masy ogólnej.');
     if (mh === '' || mh <= 0) return setAddError('Wpisz masę hamującą większą od zera.');
-    if (p === '' || p <= 0) return setAddError('Wpisz ciśnienie większe od zera.');
+    if (pg === '' || pg <= 0) return setAddError('Wpisz ciśnienie powietrza w przewodzie głównym większe od zera.');
+    if (p === '' || p <= 0) return setAddError('Wpisz ciśnienie sprężonego powietrza w przewodzie większe od zera.');
 
     changeVehicles(list => [...list, {
       ...newVehicle, id: 'v' + Date.now(), name,
-      masaOgolna: mo, masaPusty: mp, masaWlasna: mw, masaSluzbowa: msl, masaHamujaca: mh, cisnienie: p, sprawdzony: true
+      masaOgolna: mo, masaPusty: mp, masaWlasna: mw, masaSluzbowa: msl, masaHamujaca: mh, cisnienieGlowny: pg, cisnienie: p, sprawdzony: true
     }]);
     setNewVehicle(EMPTY_VEHICLE);
     setAddError('');
@@ -825,6 +876,13 @@ export default function App() {
             <p className="mt-3 font-semibold text-slate-700">
               Aplikacja dla kierowników pociągu wypełniających kartę próby hamulca przy przejeździe służbowym bez podróżnych.
             </p>
+            <p className="mt-3 mx-auto max-w-2xl px-4 py-2 rounded-md bg-red-50 border border-red-300 text-sm font-semibold text-red-700 flex items-start justify-center gap-2 text-left sm:text-center">
+              <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" aria-hidden="true" />
+              <span>
+                Aplikacja ma charakter wyłącznie pomocniczy i ułatwia wypełnienie karty próby hamulca. Korzystasz z niej na własną odpowiedzialność —
+                nie zwalnia ona kierownika pociągu z obowiązku sprawdzenia, czy wyliczone wartości są prawidłowe.
+              </span>
+            </p>
             {(updateInfo.date || updateInfo.changes) && (
               <div className="inline-block text-left mt-4 border-l-4 border-yellow-400 pl-4 py-1 text-sm">
                 {updateInfo.date && <p className="font-semibold text-blue-900">Aktualizacja: {formatDate(updateInfo.date)}</p>}
@@ -876,14 +934,14 @@ export default function App() {
                   <label htmlFor="v1" className="block text-sm text-slate-800 mb-1.5">Pojazd 1 *</label>
                   <select id="v1" value={vehicle1} onChange={e => { setVehicle1(e.target.value); setShowResults(false); }} className={selectCls}>
                     <option value="">-- Wybierz pojazd --</option>
-                    {vehicles.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+                    {orderedVehicles.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
                   </select>
                   <VehicleInfo v={v1obj} />
 
                   <label htmlFor="v2" className="block text-sm text-slate-800 mb-1.5 mt-4">Pojazd 2 (opcjonalnie)</label>
                   <select id="v2" value={vehicle2} onChange={e => { setVehicle2(e.target.value); setShowResults(false); }} className={selectCls} disabled={!vehicle1}>
                     <option value="">-- Wybierz pojazd --</option>
-                    {vehicles.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+                    {orderedVehicles.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
                   </select>
                   <VehicleInfo v={v2obj} />
 
@@ -930,7 +988,7 @@ export default function App() {
                     <Line label="Masa hamująca rzeczywista" value={`${fmt(results.masaHamujacaRzeczywista)} t`} />
                     <Line label="Procent masy hamującej wymaganej" value={`${fmt(pw)}%`} />
                     <Line label="Procent masy hamującej rzeczywistej" value={`${results.procentMasyHamujacejRzeczywistej}%`} />
-                    <Line label="Ciśnienie powietrza w przewodzie głównym" value={`${fmt(CISNIENIE_PRZEWOD_GLOWNY)} MPa`} />
+                    <Line label="Ciśnienie powietrza w przewodzie głównym" value={`${fmt(results.cisnienieGlowny)} MPa`} />
                     <Line label="Ciśnienie sprężonego powietrza w przewodzie" value={`${fmt(results.cisnienie)} MPa`} />
                   </div>
 
@@ -1053,11 +1111,30 @@ export default function App() {
             </div>
 
             {/* Lista pojazdów */}
-            <h3 className="font-semibold text-slate-800 mb-2">Pojazdy ({vehicles.length})</h3>
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+              <h3 className="font-semibold text-slate-800">Pojazdy ({vehicles.length})</h3>
+              <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                <input type="checkbox" checked={sortAlfabetyczne} onChange={e => toggleSort(e.target.checked)} className="w-4 h-4 accent-blue-900" />
+                Układaj listę alfabetycznie automatycznie
+              </label>
+            </div>
+            <p className="text-xs text-slate-500 mb-3">
+              {sortAlfabetyczne
+                ? 'Lista układa się sama alfabetycznie, także po dodaniu nowego pojazdu. Odznacz, żeby ustawić własną kolejność strzałkami.'
+                : 'Własna kolejność — przesuwaj pojazdy strzałkami. Ta kolejność obowiązuje też na liście wyboru pojazdu.'}
+            </p>
             <div className="space-y-3 mb-6">
-              {vehicles.map(v => (
+              {orderedVehicles.map((v, idx) => (
                 <div key={v.id} className={`rounded-md border p-3 ${v.sprawdzony === false ? 'border-yellow-400 bg-yellow-50' : 'border-slate-200'}`}>
                   <div className="flex gap-2 mb-2">
+                    {!sortAlfabetyczne && (
+                      <div className="flex flex-col gap-1">
+                        <button onClick={() => moveVehicle(v.id, -1)} disabled={idx === 0} title="Przesuń wyżej" aria-label={`Przesuń ${v.name} wyżej`}
+                          className="px-2 py-0.5 rounded bg-slate-100 hover:bg-blue-100 text-blue-900 disabled:opacity-30"><ArrowUp size={14} /></button>
+                        <button onClick={() => moveVehicle(v.id, 1)} disabled={idx === orderedVehicles.length - 1} title="Przesuń niżej" aria-label={`Przesuń ${v.name} niżej`}
+                          className="px-2 py-0.5 rounded bg-slate-100 hover:bg-blue-100 text-blue-900 disabled:opacity-30"><ArrowDown size={14} /></button>
+                      </div>
+                    )}
                     <input value={v.name} onChange={e => updateVehicle(v.id, 'name', e.target.value)} className={`${inputCls} font-semibold`} aria-label="Nazwa pojazdu" />
                     <button onClick={() => deleteVehicle(v.id)} title="Usuń pojazd" aria-label={`Usuń ${v.name}`}
                       className="px-3 rounded-md text-red-700 hover:bg-red-50"><Trash2 size={16} /></button>
@@ -1078,7 +1155,10 @@ export default function App() {
                     <label className="text-xs text-slate-600">Masa hamująca (t)
                       <input inputMode="decimal" value={v.masaHamujaca} onChange={e => updateVehicle(v.id, 'masaHamujaca', e.target.value)} className={`${inputCls} mt-1`} />
                     </label>
-                    <label className="text-xs text-slate-600">Ciśnienie (MPa)
+                    <label className="text-xs text-slate-600">Ciśnienie powietrza w przewodzie głównym (MPa)
+                      <input inputMode="decimal" value={v.cisnienieGlowny ?? CISNIENIE_PRZEWOD_GLOWNY} onChange={e => updateVehicle(v.id, 'cisnienieGlowny', e.target.value)} className={`${inputCls} mt-1`} />
+                    </label>
+                    <label className="text-xs text-slate-600">Ciśnienie sprężonego powietrza w przewodzie (MPa)
                       <input inputMode="decimal" value={v.cisnienie} onChange={e => updateVehicle(v.id, 'cisnienie', e.target.value)} className={`${inputCls} mt-1`} />
                     </label>
                   </div>
@@ -1123,9 +1203,15 @@ export default function App() {
                 <input placeholder="Masa służbowa (t)" inputMode="decimal" value={newVehicle.masaSluzbowa}
                   onChange={e => setNewVehicle({ ...newVehicle, masaSluzbowa: e.target.value })} className={inputCls} />
                 <input placeholder="Masa hamująca (t)" inputMode="decimal" value={newVehicle.masaHamujaca}
-                  onChange={e => setNewVehicle({ ...newVehicle, masaHamujaca: e.target.value })} className={inputCls} />
-                <input placeholder="Ciśnienie (MPa)" inputMode="decimal" value={newVehicle.cisnienie}
-                  onChange={e => setNewVehicle({ ...newVehicle, cisnienie: e.target.value })} className={`${inputCls} sm:col-span-2`} />
+                  onChange={e => setNewVehicle({ ...newVehicle, masaHamujaca: e.target.value })} className={`${inputCls} sm:col-span-4`} />
+                <label className="text-xs text-slate-600 sm:col-span-2">Ciśnienie powietrza w przewodzie głównym (MPa)
+                  <input inputMode="decimal" value={newVehicle.cisnienieGlowny}
+                    onChange={e => setNewVehicle({ ...newVehicle, cisnienieGlowny: e.target.value })} className={`${inputCls} mt-1`} />
+                </label>
+                <label className="text-xs text-slate-600 sm:col-span-2">Ciśnienie sprężonego powietrza w przewodzie (MPa)
+                  <input inputMode="decimal" placeholder="np. 0,8" value={newVehicle.cisnienie}
+                    onChange={e => setNewVehicle({ ...newVehicle, cisnienie: e.target.value })} className={`${inputCls} mt-1`} />
+                </label>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
                 {YES_NO_FIELDS.map(f => (
