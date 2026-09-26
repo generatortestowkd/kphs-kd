@@ -31,6 +31,8 @@ const SLUZBOWY_VEHICLES_DOC = doc(db, 'kph_sluzbowy', 'pojazdy');
 
 // ===== USTAWIENIA =====
 const ADMIN_PASSWORD = 'KPH2026';
+// Numer wersji widoczny w nagłówku — pozwala sprawdzić, czy serwer pokazuje najnowszy plik
+const APP_VERSION = '1.4';
 const DEFAULT_UPDATE = { date: '', changes: '' };
 // Ciśnienie powietrza w przewodzie głównym — wartość domyślna, gdy pojazd nie ma własnej
 const CISNIENIE_PRZEWOD_GLOWNY = 0.5;
@@ -854,7 +856,7 @@ export default function App() {
         {/* ================= NAGŁÓWEK ================= */}
         <header className="bg-white/95 rounded-lg shadow-md px-5 pt-4 pb-5 relative border-2 border-red-600 ring-4 ring-red-600/15">
           <div className="flex items-start justify-between gap-3">
-            <p className="text-xs sm:text-sm text-slate-700">Autor: Grzegorz Rejszel (kier. poc. 186)</p>
+            <p className="text-xs sm:text-sm text-slate-700">Autor: Grzegorz Rejszel (kier. poc. 186) <span className="text-slate-400">· wersja {APP_VERSION}</span></p>
             <button
               onClick={() => (isAdmin ? handleLogout() : setShowLogin(true))}
               title={isAdmin ? 'Wyjdź z trybu administratora' : 'Tryb administratora'}
@@ -876,8 +878,8 @@ export default function App() {
             <p className="mt-3 font-semibold text-slate-700">
               Aplikacja dla kierowników pociągu wypełniających kartę próby hamulca przy przejeździe służbowym bez podróżnych.
             </p>
-            <p className="mt-3 mx-auto max-w-2xl px-4 py-2 rounded-md bg-red-50 border border-red-300 text-sm font-semibold text-red-700 flex items-start justify-center gap-2 text-left sm:text-center">
-              <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <p className="mt-3 mx-auto max-w-xl px-3 py-1.5 rounded bg-red-50 border border-red-200 text-xs font-medium leading-snug text-red-700 flex items-start justify-center gap-1.5 text-left sm:text-center">
+              <AlertTriangle size={14} className="flex-shrink-0 mt-px" aria-hidden="true" />
               <span>
                 Aplikacja ma charakter wyłącznie pomocniczy i ułatwia wypełnienie karty próby hamulca. Korzystasz z niej na własną odpowiedzialność —
                 nie zwalnia ona kierownika pociągu z obowiązku sprawdzenia, czy wyliczone wartości są prawidłowe.
