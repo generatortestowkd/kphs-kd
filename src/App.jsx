@@ -31,6 +31,8 @@ const SLUZBOWY_VEHICLES_DOC = doc(db, 'kph_sluzbowy', 'pojazdy');
 
 // ===== USTAWIENIA =====
 const ADMIN_PASSWORD = 'KPH2026';
+// Numer wersji widoczny w nagłówku — pozwala sprawdzić, czy serwer pokazuje najnowszy plik
+const APP_VERSION = '1.7';
 const DEFAULT_UPDATE = { date: '', changes: '' };
 // Ciśnienie powietrza w przewodzie głównym — wartość domyślna, gdy pojazd nie ma własnej
 const CISNIENIE_PRZEWOD_GLOWNY = 0.5;
@@ -466,7 +468,7 @@ function Fraction({ top, bottom }) {
 // Znak ostrzegawczy z wykrzyknikiem (po obu stronach tytułu)
 function WarningSign() {
   return (
-    <svg viewBox="0 0 64 58" aria-hidden="true" className="w-8 h-7 sm:w-14 sm:h-12 flex-shrink-0 drop-shadow-sm">
+    <svg viewBox="0 0 64 58" aria-hidden="true" className="w-7 h-6 sm:w-14 sm:h-12 flex-shrink-0 drop-shadow-sm">
       <path d="M32 3 L61 54 H3 Z" fill="#dc2626" stroke="#991b1b" strokeWidth="3" strokeLinejoin="round" />
       <rect x="28.5" y="18" width="7" height="21" rx="3.5" fill="#fff" />
       <circle cx="32" cy="46" r="4" fill="#fff" />
@@ -529,6 +531,7 @@ export default function App() {
   const [saveError, setSaveError] = useState('');
   const [importing, setImporting] = useState(false);
   const fileInputRef = useRef(null);
+  const resultsRef = useRef(null);
 
   const vehiclesDirty = useRef(false);
   const updateDirty = useRef(false);
@@ -806,7 +809,7 @@ export default function App() {
   const inputCls = 'w-full px-3 py-2 border border-slate-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-blue-900';
 
   // ===== WIDOK =====
-  const selectCls = 'w-full px-3 py-2.5 border border-blue-200 rounded-md bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/30 focus:border-blue-900';
+  const selectCls = 'w-full text-base px-3 py-3 sm:py-2.5 border border-blue-200 rounded-md bg-white text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-900/30 focus:border-blue-900';
   const v1obj = vehicles.find(v => v.id === vehicle1);
   const v2obj = vehicles.find(v => v.id === vehicle2);
 
@@ -816,6 +819,11 @@ export default function App() {
     if (!results) return setFormError('Nie da się wyliczyć próby dla wybranych pojazdów — sprawdź ich dane.');
     setFormError('');
     setShowResults(true);
+    // telefon: schowaj klawiaturę i przewiń do wyniku
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    if (window.innerWidth < 768) {
+      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+    }
   };
 
   const handleReset = () => {
@@ -835,31 +843,33 @@ export default function App() {
   );
 
   const FormulaCard = ({ title, children, up, legend }) => (
-    <div className="bg-white/95 rounded-lg shadow-sm border-l-4 border-yellow-400 px-4 py-3 text-center">
-      <p className="text-xs font-semibold text-blue-900">{title}</p>
-      <div className="flex items-center justify-center gap-2 flex-wrap mt-1">
-        <div className="font-serif text-lg flex items-center">{children}</div>
-        <RoundBadge up={up} />
-        <span className="text-xs text-slate-700">{up ? 'zaokrąglenie w górę' : 'zaokrąglenie w dół'}</span>
+    <div className="bg-white/95 rounded-lg shadow-sm border-l-4 border-yellow-400 px-1.5 py-2 sm:px-4 sm:py-3 text-center flex flex-col justify-between">
+      <p className="text-[10px] sm:text-xs font-semibold text-blue-900 leading-tight">{title}</p>
+      <div className="flex items-center justify-center gap-1 sm:gap-2 flex-wrap mt-1">
+        <div className="font-serif text-sm sm:text-lg flex items-center whitespace-nowrap">{children}</div>
+        <span className="inline-flex items-center gap-1">
+          <RoundBadge up={up} />
+          <span className="text-[10px] sm:text-xs text-slate-700 leading-tight">{up ? 'zaokrąglenie w górę' : 'zaokrąglenie w dół'}</span>
+        </span>
       </div>
-      <p className="text-xs text-slate-500 mt-1">{legend}</p>
+      <p className="text-[9px] sm:text-xs text-slate-500 mt-1 leading-tight">{legend}</p>
     </div>
   );
 
   return (
     <div className="min-h-screen text-slate-900 bg-gradient-to-br from-slate-200 via-amber-50 to-slate-300"
       style={{ backgroundImage: 'repeating-linear-gradient(115deg, rgba(255,255,255,0.35) 0 2px, transparent 2px 60px), linear-gradient(135deg, #e2e8f0 0%, #fdf8ec 45%, #dbe3ec 100%)' }}>
-      <main className="max-w-5xl mx-auto px-3 sm:px-4 py-4 space-y-4">
+      <main className="max-w-5xl mx-auto px-2 sm:px-4 py-2 sm:py-4 space-y-3 sm:space-y-4" style={{ paddingTop: 'max(0.5rem, env(safe-area-inset-top))', paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
 
         {/* ================= NAGŁÓWEK ================= */}
-        <header className="bg-white/95 rounded-lg shadow-md px-5 pt-4 pb-5 relative border-2 border-red-600 ring-4 ring-red-600/15">
+        <header className="bg-white/95 rounded-lg shadow-md px-3 pt-2 pb-3 sm:px-5 sm:pt-4 sm:pb-5 relative border-2 border-red-600 ring-4 ring-red-600/15">
           <div className="flex items-start justify-between gap-3">
-            <p className="text-xs sm:text-sm text-slate-700">Autor: Grzegorz Rejszel (kier. poc. 186)</p>
+            <p className="text-[11px] sm:text-sm text-slate-700">Autor: Grzegorz Rejszel (kier. poc. 186) <span className="text-slate-400">· wersja {APP_VERSION}</span></p>
             <button
               onClick={() => (isAdmin ? handleLogout() : setShowLogin(true))}
               title={isAdmin ? 'Wyjdź z trybu administratora' : 'Tryb administratora'}
               aria-label={isAdmin ? 'Wyjdź z trybu administratora' : 'Tryb administratora'}
-              className="text-slate-400 hover:text-blue-900 p-1 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="text-slate-400 hover:text-blue-900 p-2 -m-1 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400"
             >
               {isAdmin ? <LogOut size={16} /> : <Lock size={16} />}
             </button>
@@ -867,24 +877,24 @@ export default function App() {
           <div className="text-center mt-1">
             <div className="flex items-center justify-center gap-2 sm:gap-6">
               <WarningSign />
-              <h1 className="text-xl sm:text-3xl font-bold text-red-700 leading-tight">
+              <h1 className="text-lg sm:text-3xl font-bold text-red-700 leading-tight">
                 <span className="block">Próba hamulca –</span>
                 <span className="block">jazda „S”{'\u00a0'}(esem) – bez{'\u00a0'}podróżnych</span>
               </h1>
               <WarningSign />
             </div>
-            <p className="mt-3 font-semibold text-slate-700">
+            <p className="hidden sm:block mt-3 font-semibold text-slate-700">
               Aplikacja dla kierowników pociągu wypełniających kartę próby hamulca przy przejeździe służbowym bez podróżnych.
             </p>
-            <p className="mt-3 mx-auto max-w-2xl px-4 py-2 rounded-md bg-red-50 border border-red-300 text-sm font-semibold text-red-700 flex items-start justify-center gap-2 text-left sm:text-center">
-              <AlertTriangle size={18} className="flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <p className="mt-2 sm:mt-3 mx-auto max-w-xl px-2 sm:px-3 py-1 sm:py-1.5 rounded bg-red-50 border border-red-200 text-[11px] sm:text-xs font-medium leading-snug text-red-700 flex items-start justify-center gap-1.5 text-left sm:text-center">
+              <AlertTriangle size={14} className="flex-shrink-0 mt-px" aria-hidden="true" />
               <span>
                 Aplikacja ma charakter wyłącznie pomocniczy i ułatwia wypełnienie karty próby hamulca. Korzystasz z niej na własną odpowiedzialność —
                 nie zwalnia ona kierownika pociągu z obowiązku sprawdzenia, czy wyliczone wartości są prawidłowe.
               </span>
             </p>
             {(updateInfo.date || updateInfo.changes) && (
-              <div className="inline-block text-left mt-4 border-l-4 border-yellow-400 pl-4 py-1 text-sm">
+              <div className="inline-block text-left mt-2 sm:mt-4 border-l-4 border-yellow-400 pl-3 sm:pl-4 py-0.5 sm:py-1 text-xs sm:text-sm">
                 {updateInfo.date && <p className="font-semibold text-blue-900">Aktualizacja: {formatDate(updateInfo.date)}</p>}
                 {updateInfo.changes && <p className="text-slate-700 mt-0.5">{updateInfo.changes}</p>}
               </div>
@@ -893,7 +903,7 @@ export default function App() {
         </header>
 
         {/* ================= WZORY ================= */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <section className="grid grid-cols-2 gap-2 sm:gap-3">
           <FormulaCard
             title="Masa hamująca wymagana" up
             legend={<>M<sub>o</sub> – masa ogólna, P<sub>w</sub> – procent wymagany (z WRJ)</>}
@@ -914,12 +924,12 @@ export default function App() {
         </section>
 
         {/* ================= KALKULATOR ================= */}
-        <section className="bg-white/95 rounded-lg shadow-sm border-t-4 border-yellow-400 p-5">
+        <section className="bg-white/95 rounded-lg shadow-sm border-t-4 border-yellow-400 p-4 sm:p-5">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-0">
             {/* ----- Lewa kolumna ----- */}
             <div className="md:pr-6 md:border-r border-slate-200">
-              <h2 className="text-xl font-semibold text-blue-900 mb-4">Wybór pojazdów</h2>
-              <div className="p-3 mb-4 rounded-md bg-yellow-50 border-l-4 border-yellow-400 text-sm text-blue-900">
+              <h2 className="text-lg sm:text-xl font-semibold text-blue-900 mb-3 sm:mb-4">Wybór pojazdów</h2>
+              <div className="p-2.5 sm:p-3 mb-4 rounded-md bg-yellow-50 border-l-4 border-yellow-400 text-xs sm:text-sm text-blue-900">
                 Przy wykonywaniu próby hamulca dla dwóch połączonych składów należy wybrać dwa pojazdy.
               </div>
 
@@ -948,7 +958,7 @@ export default function App() {
                   <label htmlFor="pw" className="block text-sm text-slate-800 mt-4">Procent wymagany (%) *</label>
                   <p className="text-xs text-slate-500 mb-1.5">Bierzemy go z WRJ (wewnętrznego rozkładu jazdy).</p>
                   <input
-                    id="pw" type="text" inputMode="decimal" placeholder="np. 65"
+                    id="pw" type="text" inputMode="decimal" enterKeyHint="done" autoComplete="off" placeholder="np. 65"
                     value={procentWymagany}
                     onChange={e => { setProcentWymagany(e.target.value); setShowResults(false); }}
                     onKeyDown={e => e.key === 'Enter' && handleCalculate()}
@@ -973,7 +983,7 @@ export default function App() {
 
             {/* ----- Prawa kolumna ----- */}
             <div className="md:pl-6">
-              <h2 className="text-xl font-semibold text-blue-900 mb-4">Podsumowanie wyliczeń</h2>
+              <h2 ref={resultsRef} className="scroll-mt-3 text-lg sm:text-xl font-semibold text-blue-900 mb-3 sm:mb-4">Podsumowanie wyliczeń</h2>
 
               {!(showResults && results) ? (
                 <div className="p-4 rounded-md bg-slate-50 border-l-4 border-slate-300 text-sm text-slate-600">
